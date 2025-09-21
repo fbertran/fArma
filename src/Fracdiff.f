@@ -1907,6 +1907,8 @@ c     double precision   H(lH, npq1)
       save   /WFILFD/
 
       integer            lqp, la, lajac, ipvt, ldiag, lqtf,
+C-- Silence unused-arg warning
+      if (.false.) print *, x
      *                   lwa1, lwa2, lwa3, lwa4
       common /WOPTFD/    lqp, la, lajac, ipvt, ldiag, lqtf,
      *                   lwa1, lwa2, lwa3, lwa4
@@ -1916,9 +1918,6 @@ c  copyright 1991 Department of Statistics, University of Washington
 c  written by Chris Fraley
 
 c-----------------------------------------------------------------------------
-
-C-- Silence unused-arg warning
-      if (.false.) print *, x
       
       call hesspq( w(lqp), w(la), w(lajac), nm, H, lH,
      *             w(lwa4), w(lwa1))
