@@ -313,19 +313,6 @@ c     real              x(n)
       save   /MNPKFD/
 
 
-
-
-
-      subroutine fdhpq( x, H, lH, w )
-      double precision x, H(*), w(*)
-      integer lH
-C-- Silence unused-arg warning without side effects:
-      if (.false.) print *, x
-C... rest of code ...
-      end
-
-
-
 c  copyright 1991 Department of Statistics, University of Washington
 c  written by Chris Fraley
 
@@ -1014,7 +1001,7 @@ c
           do l = 1, np
             t  = t - p(l)*y(k-l)
           end do
- 101      a(k-np) = y(k) + t
+          a(k-np) = y(k) + t
         end do
 
         return
@@ -1732,7 +1719,7 @@ C        dxrel = dsqrt (d1mach(4))
          dxrel =  sqrt ( FLTMAX  )
        endif
 C10   y = dabs (x)
- 10   y =  abs (x)
+      y =  abs (x)
       if (y.gt.10.d0) go to 20
 c
 c     dlog (dabs (dgamma_fd(x)) ) for dabs(x) .le. 10.0
