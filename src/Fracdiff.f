@@ -1072,7 +1072,7 @@ c
               s  = s + qp(l)*a(km-l)
             end do
           end if
- 101      a(km) = y(k) + (t + s)
+          a(km) = y(k) + (t + s)
         end do
 
         nfun = nfun + 1
@@ -3867,7 +3867,7 @@ c
         sum = sum + ar(i)*s(k-i)
           end do
 
-10        continue
+          continue
 
           do j = 1, iq
         sum = sum-ma(j)*y(k+iq-j)
