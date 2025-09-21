@@ -312,6 +312,20 @@ c     real              x(n)
       common /MNPKFD/    IMINPK, JMINPK
       save   /MNPKFD/
 
+
+
+
+
+      subroutine fdhpq( x, H, lH, w )
+      double precision x, H(*), w(*)
+      integer lH
+C-- Silence unused-arg warning without side effects:
+      if (.false.) print *, x
+C... rest of code ...
+      end
+
+
+
 c  copyright 1991 Department of Statistics, University of Washington
 c  written by Chris Fraley
 
