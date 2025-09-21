@@ -202,7 +202,7 @@ c    *               'increase length of w by at least', incw
         return
       endif
 
-c     if (npq .ne. 0) call dcopy( npq, zero, 0, w(lqp), 1)
+c     if (npq .ne. 0) call dset(npq, zero, w(lqp), 1)
 
       if (npq .ne. 0) then
         call dcopy( np, ar, 1, w(lqp+nq), 1)
@@ -223,8 +223,8 @@ c     end if
       if (IGAMMA .ne. 0 .or. IMINPK .ne. 0) then
         d    = FLTMAX
         hood = FLTMAX
-        call dcopy( np, FLTMAX, 0, ar, 1)
-        call dcopy( nq, FLTMAX, 0, ma, 1)
+    	call dset(np, FLTMAX, ar, 1)
+        call dset(nq, FLTMAX, ma, 1)
         if (IGAMMA .ne. 0) inform = 2
         if (IMINPK .ne. 0) inform = 3
         return
@@ -594,7 +594,7 @@ c----------------------------------------------------------------------------
 c
 c optimize as an unconstrained optimization problem
 c
-         if (modelm .eq. 2) call dcopy( npq,  one, 0, w(ldiag), 1)
+         if (modelm .eq. 2) call dset(npq, one, w(ldiag), 1)
 
          if (nopt .lt. 0) then
            if (np .ne. 0) then
@@ -3892,3 +3892,27 @@ c
        end
 
 
+
+C----------------------------------------------------------------------
+C  dset: fill a double-precision vector with a constant value.
+C  Portable Fortran 77 implementation supporting arbitrary stride incx.
+C  Usage: call dset(n, c, x, incx)
+C----------------------------------------------------------------------
+      subroutine dset(n, c, x, incx)
+      integer n, incx, i, ix
+      double precision c, x(*)
+      if (n .le. 0) return
+      if (incx .eq. 1) then
+         do 10 i = 1, n
+            x(i) = c
+   10    continue
+      else
+         ix = 1
+         if (incx .lt. 0) ix = 1 + (1-n)*incx
+         do 20 i = 1, n
+            x(ix) = c
+            ix = ix + incx
+   20    continue
+      end if
+      return
+      end
