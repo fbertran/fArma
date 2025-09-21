@@ -1395,7 +1395,8 @@ c
 c
 C     int = dmod (-dint(x), 2.0d0) + 0.1d0
 C     if (int.eq.0) sgngam = -1.0d0
-      intx =  mod (-dble(int(x)), 2.0d0) + 0.1d0
+      intx = MOD(-INT(x), 2)
+C     intx =  mod (-dble(int(x)), 2.0d0) + 0.1d0
       if (intx.eq.0) sgngam = -1.0d0
 c
       return
