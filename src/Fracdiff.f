@@ -692,7 +692,7 @@ c**************************************************************************
       double precision  zero, one, two
       parameter        (zero=0.d0, one=1.d0, two=2.d0)
 
-      double precision  dgamma, dgamr
+      double precision  dgamma_fd, dgamr
 
       intrinsic         log, sqrt
 
@@ -734,7 +734,7 @@ c
         t  = dgamr(one-d)
         if (IGAMMA .ne. 0) return
 
-        g0 = dgamma(one-(two*d))*(t*t)
+        g0 = dgamma_fd(one-(two*d))*(t*t)
         if (IGAMMA .ne. 0) return
 
         vk(1)  = g0
@@ -1115,7 +1115,7 @@ C ##############################################################################
 C FRACDIFF-fdgam
 
 
-      double precision function dgamma (x)
+      double precision function dgamma_fd (x)
 c     jan 1984 edition.  w. fullerton, c3, los alamos scientific lab.
 C     double precision x, gamcs(42), dxrel, pi, sinpiy, sq2pil, xmax,
 C     1  xmin, y, d9lgmc, dcsevl, d1mach, dexp, dint, dlog,
@@ -1193,7 +1193,7 @@ c
 c     sq2pil is 0.5*alog(2*pi) = alog(sqrt(2*pi))
       data sq2pil / 0.9189385332 0467274178 0329736405 62 d0 /
       data ngam, xmin, xmax, xsml, dxrel / 0, 4*0.d0 /
-      dgamma = -999d0
+      dgamma_fd = -999d0
 c
       if (ngam.eq.0) then
 C        ngam = initds (gamcs, 42, 0.1*sngl(  d1mach) )
@@ -1218,10 +1218,10 @@ c
       if (x.lt.0.d0) n = n - 1
       y = x - dble(float(n))
       n = n - 1
-C     dgamma = 0.9375d0 + dcsevl (2.d0*y-1.d0, gamcs, ngam)
+C     dgamma_fd = 0.9375d0 + dcsevl (2.d0*y-1.d0, gamcs, ngam)
       temp = dcsevl (2.d0*y-1.d0, gamcs, ngam)
       if (IGAMMA .ne. 0) return
-      dgamma = 0.9375d0 + temp
+      dgamma_fd = 0.9375d0 + temp
       if (n.eq.0) return
 c
       if (n.gt.0) go to 30
@@ -1241,38 +1241,38 @@ C     1  54hdgamma  x is so close to 0.0 that the result overflows,
 C     2  54, 5, 2)
 
       if (x.eq.0.d0) then
-C     write(6,*) 'dgamma : x is 0'
+C     write(6,*) 'dgamma_fd : x is 0'
          IGAMMA = 11
          return
       end if
 
       if (x.lt.0d0 .and. x+dble(float(n-2)).eq.0.d0) then
-C     write( 6, *) 'dgamma : x is a negative integer'
+C     write( 6, *) 'dgamma_fd : x is a negative integer'
          IGAMMA = 12
          return
       end if
 
       if (x.lt.(-0.5d0) .and. abs((x-dble(int(x-0.5d0)))/x).lt.dxrel)
-C     1  write(6,*) 'dgamma : answer lt half precision because
+C     1  write(6,*) 'dgamma_fd : answer lt half precision because
 C     2                       x too near a negative integer'
      *     JGAMMA = 11
 
       if (y.lt.xsml) then
-c     write(6,*)  'dgamma :,
+c     write(6,*)  'dgamma_fd :,
 c     1               x is so close to 0.0 that the result overflows'
          IGAMMA = 13
          return
       end if
 c
       do 20 i=1,n
-         dgamma = dgamma/(x+dble(float(i-1)) )
+         dgamma_fd = dgamma_fd/(x+dble(float(i-1)) )
  20   continue
       return
 c
 c     gamma(x) for x .ge. 2.0 and x .le. 10.0
 c
  30   do 40 i=1,n
-         dgamma = (y+dble(float(i))) * dgamma
+         dgamma_fd = (y+dble(float(i))) * dgamma_fd
  40   continue
       return
 c
@@ -1282,26 +1282,26 @@ C50   if (x.gt.xmax) call seteru (32hdgamma  x so big gamma overflows,
 C    1  32, 3, 2)
 
  50   if (x.gt.xmax) then
-c     write(6,*) 'dgamma : x so big gamma overflows'
+c     write(6,*) 'dgamma_fd : x so big gamma overflows'
          IGAMMA = 14
          return
       end if
 c
-      dgamma = 0.d0
+      dgamma_fd = 0.d0
 C     if (x.lt.xmin) call seteru (35hdgamma  x so small gamma underflows
 C     1  , 35, 2, 0)
 C     if (x.lt.xmin) return
 
       if (x.lt.xmin) then
-c     write(6,*) 'dgamma : x so small gamma underflows'
+c     write(6,*) 'dgamma_fd : x so small gamma underflows'
          JGAMMA = 12
          return
       end if
 c
-C     dgamma = dexp ((y-0.5d0)*dlog(y) - y + sq2pil + d9lgmc(y) )
+C     dgamma_fd = dexp ((y-0.5d0)*dlog(y) - y + sq2pil + d9lgmc(y) )
       temp = d9lgmc(y)
       if (IGAMMA .ne. 0) return
-      dgamma =  exp ((y-0.5d0)* log(y) - y + sq2pil + temp)
+      dgamma_fd =  exp ((y-0.5d0)* log(y) - y + sq2pil + temp)
       if (x.gt.0.d0) return
 c
 C     if (dabs((x-dint(x-0.5d0))/x).lt.dxrel) call seteru (
@@ -1316,25 +1316,25 @@ C     if (sinpiy.eq.0.d0) call seteru (
 C     1  31hdgamma  x is a negative integer, 31, 4, 2)
 
       if (sinpiy.eq.0.d0) then
-C     write(6,*) 'dgamma : x is a negative integer'
+C     write(6,*) 'dgamma_fd : x is a negative integer'
          IGAMMA = 12
          return
       end if
 c
-      dgamma = -pi/(y*sinpiy*dgamma)
+      dgamma_fd = -pi/(y*sinpiy*dgamma_fd)
 c
       return
       end
 
       double precision function dgamr (x)
 c july 1977 edition.  w. fullerton, c3, los alamos scientific lab.
-c this routine, not dgamma(x), should be the fundamental one.
+c this routine, not dgamma_fd(x), should be the fundamental one.
 c
-C     double precision x, alngx, sgngx, dgamma, dint, dexp, d1mach
-      double precision x, alngx, sgngx, temp,  dgamma
+C     double precision x, alngx, sgngx, dgamma_fd, dint, dexp, d1mach
+      double precision x, alngx, sgngx, temp,  dgamma_fd
 
-C     external dexp, dgamma, dint, d1mach
-      external dgamma
+C     external dexp, dgamma_fd, dint, d1mach
+      external dgamma_fd
 
       double precision   FLTMIN, FLTMAX, EPSMIN, EPSMAX
       common /MACHFD/    FLTMIN, FLTMAX, EPSMIN, EPSMAX
@@ -1350,10 +1350,10 @@ C     if (x.le.0d0 .and. dint(x).eq.x) return
 c
 C     call entsrc (irold, 1)
       if (dabs(x).gt.10d0) go to 10
-C     dgamr = 1.0d0/dgamma(x)
+C     dgamr = 1.0d0/dgamma_fd(x)
 C     call erroff
 C     call entsrc (ir, irold)
-      temp = dgamma(x)
+      temp = dgamma_fd(x)
       if (IGAMMA .ne. 0) then
 C       dgamr = d1mach(2)
         dgamr = FLTMAX
@@ -1522,7 +1522,7 @@ c
 c august 1977 edition.  w. fullerton, c3, los alamos scientific lab.
 c
 c compute the log gamma correction factor for x .ge. 10. so that
-c dlog (dgamma(x)) = dlog(dsqrt(2*pi)) + (x-.5)*dlog(x) - x + d9lgmc(x)
+c dlog (dgamma_fd(x)) = dlog(dsqrt(2*pi)) + (x-.5)*dlog(x) - x + d9lgmc(x)
 c
 C     double precision x, algmcs(15), xbig, xmax, dcsevl, d1mach,
 C    1  dexp, dlog, dsqrt
@@ -1687,12 +1687,12 @@ c
       double precision function dlngam (x)
 c     august 1980 edition.   w. fullerton, c3, los alamos scientific lab.
 C     double precision x, dxrel, pi, sinpiy, sqpi2l, sq2pil,
-C     1  y, xmax, dint, dgamma, d9lgmc, d1mach, dlog, dsin, dsqrt
+C     1  y, xmax, dint, dgamma_fd, d9lgmc, d1mach, dlog, dsin, dsqrt
       double precision x, dxrel, pi, sinpiy, sqpi2l, sq2pil,
-     1     y, xmax, dgamma, d9lgmc
+     1     y, xmax, dgamma_fd, d9lgmc
       double precision   temp
-C     external d1mach, d9lgmc, dgamma, dint, dlog, dsin, dsqrt
-      external d9lgmc, dgamma
+C     external d1mach, d9lgmc, dgamma_fd, dint, dlog, dsin, dsqrt
+      external d9lgmc, dgamma_fd
 
       double precision   FLTMIN, FLTMAX, EPSMIN, EPSMAX
       common /MACHFD/    FLTMIN, FLTMAX, EPSMIN, EPSMAX
@@ -1720,10 +1720,10 @@ C10   y = dabs (x)
  10   y =  abs (x)
       if (y.gt.10.d0) go to 20
 c
-c     dlog (dabs (dgamma(x)) ) for dabs(x) .le. 10.0
+c     dlog (dabs (dgamma_fd(x)) ) for dabs(x) .le. 10.0
 c
-C     dlngam = dlog (dabs (dgamma(x)) )
-      temp   = dgamma(x)
+C     dlngam = dlog (dabs (dgamma_fd(x)) )
+      temp   = dgamma_fd(x)
       if (IGAMMA .ne. 0) then
 C     dlngam = d1mach(2)
          dlngam = FLTMAX
@@ -1732,7 +1732,7 @@ C     dlngam = d1mach(2)
       dlngam = log (abs (temp) )
       return
 c
-c     dlog ( dabs (dgamma(x)) ) for dabs(x) .gt. 10.0
+c     dlog ( dabs (dgamma_fd(x)) ) for dabs(x) .gt. 10.0
 c
 C     20   if (y.gt.xmax) call seteru (
 C     1  39hdlngam  dabs(x) so big dlngam overflows, 39, 2, 2)
@@ -3762,9 +3762,9 @@ c     real               y(n+iq), s(n+iq)
 
       double precision   flmin, flmax, epmin, epmax
 
-      double precision   dgamr, dgamma
+      double precision   dgamr, dgamma_fd
 
-      external           dgamr, dgamma
+      external           dgamr, dgamma_fd
 
       integer            k, j, i
 
@@ -3799,7 +3799,7 @@ c    Calculate g0
           return
         end if
 
-        g0   = dgamma(one-two*d)*(temp*temp)
+        g0   = dgamma_fd(one-two*d)*(temp*temp)
         if (IGAMMA .ne. 0) then
           do i = 1, n
             s(i) = zero
