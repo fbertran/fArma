@@ -9,6 +9,9 @@
 /* #include "wavelet.h" */
 
 #include <R.h>
+#include <Rinternals.h>    /* if you touch SEXP */
+#include <R_ext/BLAS.h>    /* if you call BLAS */
+#include <R_ext/Utils.h>   /* for R_CheckUserInterrupt etc. */
 
 #define PERIODIC    1
 #define SYMMETRIC   2
@@ -50,20 +53,20 @@ void convolveD(
 
 void wavedecomp(
     double *C,      /* Input data, and the subsequent smoothed data */
-    Sint *LengthC,  /* Length of C array                            */
+    int *LengthC,  /* Length of C array                            */
     double *D,      /* The wavelet coefficients                     */
-    Sint *LengthD,  /* Length of D array                            */
+    int *LengthD,  /* Length of D array                            */
     double *H,      /* The smoothing filter H                       */
-    Sint *LengthH,  /* Length of smoothing filter                   */
-    Sint *levels,   /* The number of levels in this decomposition   */
-    Sint *firstC,   /* The first possible C coef at a given level   */
-    Sint *lastC,    /* The last possible C coef at a given level    */
-    Sint *offsetC,  /* Offset from C[0] for certain level's coeffs  */
-    Sint *firstD,   /* The first possible D coef at a given level   */
-    Sint *lastD,    /* The last possible D coef at a given level    */
-    Sint *offsetD,  /* Offset from D[0] for certain level's coeffs  */
-    Sint *bc,       /* Method of boundary correction                */
-    Sint *ierr      /* Error code                                   */
+    int *LengthH,  /* Length of smoothing filter                   */
+    int *levels,   /* The number of levels in this decomposition   */
+    int *firstC,   /* The first possible C coef at a given level   */
+    int *lastC,    /* The last possible C coef at a given level    */
+    int *offsetC,  /* Offset from C[0] for certain level's coeffs  */
+    int *firstD,   /* The first possible D coef at a given level   */
+    int *lastD,    /* The last possible D coef at a given level    */
+    int *offsetD,  /* Offset from D[0] for certain level's coeffs  */
+    int *bc,       /* Method of boundary correction                */
+    int *ierr      /* Error code                                   */
     );
 
 
@@ -257,20 +260,20 @@ int reflect(
 
 void wavedecomp(
     double *C,          /* Input data, and the subsequent smoothed data */
-    Sint *LengthC,      /* Length of C array                            */
+    int *LengthC,      /* Length of C array                            */
     double *D,          /* The wavelet coefficients                     */
-    Sint *LengthD,      /* Length of D array                            */
+    int *LengthD,      /* Length of D array                            */
     double *H,          /* The smoothing filter H                       */
-    Sint *LengthH,      /* Length of smoothing filter                   */
-    Sint *levels,       /* The number of levels in this decomposition   */
-    Sint *firstC,       /* The first possible C coef at a given level   */
-    Sint *lastC,        /* The last possible C coef at a given level    */
-    Sint *offsetC,      /* Offset from C[0] for certain level's coeffs  */
-    Sint *firstD,       /* The first possible D coef at a given level   */
-    Sint *lastD,        /* The last possible D coef at a given level    */
-    Sint *offsetD,      /* Offset from D[0] for certain level's coeffs  */
-    Sint *bc,           /* Method of boundary correction                */
-    Sint *ierr          /* Error code                                   */
+    int *LengthH,      /* Length of smoothing filter                   */
+    int *levels,       /* The number of levels in this decomposition   */
+    int *firstC,       /* The first possible C coef at a given level   */
+    int *lastC,        /* The last possible C coef at a given level    */
+    int *offsetC,      /* Offset from C[0] for certain level's coeffs  */
+    int *firstD,       /* The first possible D coef at a given level   */
+    int *lastD,        /* The last possible D coef at a given level    */
+    int *offsetD,      /* Offset from D[0] for certain level's coeffs  */
+    int *bc,           /* Method of boundary correction                */
+    int *ierr          /* Error code                                   */
     )
 {
     register int next_level, at_level;
