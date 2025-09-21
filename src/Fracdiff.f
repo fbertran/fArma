@@ -1907,12 +1907,13 @@ c     double precision   H(lH, npq1)
       save   /WFILFD/
 
       integer            lqp, la, lajac, ipvt, ldiag, lqtf,
-C-- Silence unused-arg warning
-      if (.false.) print *, x
      *                   lwa1, lwa2, lwa3, lwa4
       common /WOPTFD/    lqp, la, lajac, ipvt, ldiag, lqtf,
      *                   lwa1, lwa2, lwa3, lwa4
       save   /WOPTFD/
+
+C-- Silence unused-arg warning
+      if (.false.) print *, x
 
 c  copyright 1991 Department of Statistics, University of Washington
 c  written by Chris Fraley
