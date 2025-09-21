@@ -2004,7 +2004,8 @@ c      lfree = lwork + npq1
       if (info .ne. 0) then
         call dcopy( npq1, zero, 0, se, 1)
         do j = 1, npq1
-           call dcopy( npq1, zero, 0, cov(1,j), 1)
+           external dscal
+           call dscal( npq1, 0d0, cov(1,j), 1)
         end do
         KSVD = 1
         info = 3
@@ -2116,7 +2117,8 @@ c-----------------------------------------------------------------------------
  100  continue
 
       do k = 1, npq1
-        call dcopy( k, zero, 0, cov( 1, k), 1)
+        external dscal
+        call dscal( k, 0d0, cov( 1, k), 1)
       end do
 
       if (krank .eq. 0) return
