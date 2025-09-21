@@ -1917,11 +1917,14 @@ c  written by Chris Fraley
 
 c-----------------------------------------------------------------------------
 
+C-- Silence unused-arg warning
+      if (.false.) print *, x
+      
       call hesspq( w(lqp), w(la), w(lajac), nm, H, lH,
      *             w(lwa4), w(lwa1))
 
-c     call dcopy( npq1, zero, 0, H(1,1), lH)
-c     call dcopy( npq , zero, 0, H(2,1), 1)
+c     call dscal( npq1, 0, H(1,1), lH)
+c     call dscal( npq , 0, H(2,1), 1)
 
       return
       end
@@ -2004,7 +2007,7 @@ c      lfree = lwork + npq1
      *            w(lu), npq1, w(lv), npq1, w(lwork), 11, info)
 
       if (info .ne. 0) then
-        call dcopy( npq1, zero, 0, se, 1)
+        call dscal( npq1, 0d0, se, 1)
         do j = 1, npq1
            call dscal( npq1, 0d0, cov(1,j), 1)
         end do
@@ -2044,7 +2047,7 @@ c      lfree = lwork + npq1
       else
         KCOR = 1
         do j = 1, npq1
-          call dcopy( npq1, zero, 0, cor(1,j), 1)
+          call dscal( npq1, 0d0, cor(1,j), 1)
         end do
       end if
 
