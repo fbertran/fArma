@@ -1913,7 +1913,7 @@ c     double precision   H(lH, npq1)
       save   /WOPTFD/
 
 C-- Silence unused-arg warning
-      if (.false.) print *, x
+      if (.false.) call dscal(0, 0d0, x, 1)
 
 c  copyright 1991 Department of Statistics, University of Washington
 c  written by Chris Fraley
